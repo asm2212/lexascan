@@ -1,11 +1,19 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import passport from 'passport';
+import "./config/passport"
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
-dotenv.config();
+// routes
+import authRoute from "./routes/auth";
+
+
 
 const app = express();
 
@@ -18,7 +26,26 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 
-const PORT = 5000
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI! }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/auth", authRoute);
+
+const PORT = 3000
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
 })
