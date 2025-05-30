@@ -45,7 +45,7 @@ app.use(passport.session());
 
 app.use("/auth", authRoute);
 
-const PORT = 3000
+const PORT = 8080
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
 })
