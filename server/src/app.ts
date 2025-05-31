@@ -20,8 +20,12 @@ const app = express();
 mongoose.connect(process.env.MONGODB_URI!)
 .then(() => console.log("connected to mongodb"))
 .catch((err) => console.error(err));
-
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
