@@ -4,7 +4,9 @@ import multer from 'multer'
 import { IUser } from '../models/user.model';
 import redis from '../config/redis';
 import { analyzeContractWithAI, detectContractType, extractTextFromPDF } from '../services/ai.services';
-import { IContractAnalysis } from '../models/contract.model';
+import ContractAnalysisSchema, {
+  IContractAnalysis,
+} from "../models/contract.model";
 
 
 const upload = multer({
